@@ -1,0 +1,35 @@
+# Node modules (packages)
+node_modules/
+
+# Environment variables
+.env
+
+# Prisma generated client (optional)
+generated/
+generated/prisma/
+
+# Prisma database files (SQLite or dev DBs)
+prisma/dev.db
+prisma/dev.sqlite
+
+# Uploaded files (if storing locally)
+uploads/
+
+# Build output
+dist/
+build/
+
+# Logs
+*.log
+logs/
+
+# OS/System files
+.DS_Store
+Thumbs.db
+
+# Temp files
+*.tmp
+*.swp
+
+# VSCode settings (optional)
+.vscode/

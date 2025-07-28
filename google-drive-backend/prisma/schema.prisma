@@ -1,0 +1,49 @@
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(uuid()) // same as Firebase UID
+  email     String   @unique
+  firebaseUid  String   @unique
+  createdAt DateTime @default(now())
+  folders   Folder[]
+  files     File[]
+}
+
+model Folder {
+  id        String   @id @default(uuid())
+  name      String
+  parentId  String?    // self-referencing for nested folders
+  parent    Folder?    @relation("FolderHierarchy", fields: [parentId], references: [id])
+  children  Folder[]   @relation("FolderHierarchy")
+  user      User       @relation(fields: [userId], references: [id])
+  userId    String
+  files     File[]
+  createdAt DateTime   @default(now())
+
+  @@index([userId])
+}
+
+model File {
+  id         String   @id @default(uuid())
+  name       String
+  url        String   // Firebase Storage URL
+  size       Int
+  contentType String
+  folder     Folder?  @relation(fields: [folderId], references: [id])
+  folderId   String?
+  user       User     @relation(fields: [userId], references: [id])
+  userId     String
+  createdAt  DateTime @default(now())
+
+  @@index([userId])
+}
+
