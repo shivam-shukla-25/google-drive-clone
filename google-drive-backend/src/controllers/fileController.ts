@@ -1,3 +1,4 @@
+
 import { Request, Response } from 'express';
 import { db } from '../config/firebase';
 import { v4 as uuidv4 } from 'uuid';
@@ -110,5 +111,24 @@ export const deleteFile = async (req: Request, res: Response) => {
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: 'Delete failed' });
+  }
+};
+
+
+export const previewFile = async (req: Request, res: Response) => {
+  const userId = (req as any).uid;
+  const { id } = req.params;
+  try {
+    const file = await prisma.file.findFirst({ where: { id, userId } });
+    if (!file) return res.status(404).json({ message: 'File not found' });
+    if (!file.url || !fs.existsSync(file.url)) {
+      return res.status(404).json({ message: 'File not found on disk' });
+    }
+    res.setHeader('Content-Type', file.contentType || 'application/octet-stream');
+    const stream = fs.createReadStream(file.url);
+    stream.pipe(res);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Preview failed' });
   }
 };
