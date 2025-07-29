@@ -23,22 +23,6 @@ export function meta({}: Route.MetaArgs) {
   ];
 }
 
-// const initialDB = [
-//     {
-//       id: "1",
-//       name: "Projects",
-//       type: "folder",
-//       children: [
-//         { id: "2", name: "app.jsx", type: "file" },
-//         {
-//           id: "3",
-//           name: "Docs",
-//           type: "folder",
-//           children: [{ id: "4", name: "README.md", type: "file" }],
-//         },
-//       ],
-//     },
-//   ]
 
 export default function Home() {
   const { token, user } = useAuth();
@@ -47,6 +31,7 @@ export default function Home() {
   const [currentPath, setCurrentPath] = useState<string[]>([])
   const [showUploadModal, setShowUploadModal] = useState(false);
   const [previewFile, setPreviewFile] = useState<FileItem | null>(null);
+  const [sidebarHidden, setSidebarHidden] = useState(false);
 
   // Utility: build a tree from a flat folder list
   // Accepts both folders and files, merges them, and builds a tree
@@ -141,44 +126,6 @@ export default function Home() {
   }, [token]);
 
 
-
-  // const handleUploadImage = async (file: File) => {
-  //   try {
-  //     const parentId = currentPath.at(-1) || null;
-
-  //     // Reuse createFolder() for file upload
-  //     const uploadedFile = await createFolder(file, parentId, token); // file instead of name
-
-  //     const newFile: FileItem = {
-  //       id: uploadedFile.id,
-  //       name: uploadedFile.name,
-  //       type: "file",
-  //       url: uploadedFile.url,
-  //     };
-
-  //     setFolders((prev) => {
-  //       const update = (items: FileItem[], pathIndex: number): FileItem[] => {
-  //         if (pathIndex >= currentPath.length) return [...items, newFile];
-  //         const targetId = currentPath[pathIndex];
-  //         return items.map((item) => {
-  //           if (item.id === targetId && item.type === "folder") {
-  //             return {
-  //               ...item,
-  //               children: update(item.children || [], pathIndex + 1),
-  //             };
-  //           }
-  //           return item;
-  //         });
-  //       };
-  //       return update(prev, 0);
-  //     });
-
-  //     setShowUploadModal(false);
-  //   } catch (err) {
-  //     console.error("Upload file failed", err);
-  //   }
-  // };
-
   const handleUploadImage = async (file: File) => {
     try {
       const parentId = currentPath.at(-1) || null;
@@ -268,50 +215,6 @@ export default function Home() {
 
     setShowModal(false);
   };
-
-
-  // const handleCreateFolder = async (name: string) => {
-  //   const newFolder: FileItem = {
-  //     id: uuidv4(),
-  //     name,
-  //     type: "folder",
-  //     children: [],
-  //   };
-
-  //   try {
-  //     const parentId = currentPath.at(-1) || null;
-  //     const newFolder = await createFolder(name, parentId, token);
-  //     setFolders((prev) => [...prev, newFolder]);
-  //   } catch (err) {
-  //     console.error("Create folder failed", err);
-  //   }
-  //   // setFolders((prev) => {
-  //   //   // Helper function to recursively update the folder structure
-  //   //   const updateFolderStructure = (items: FileItem[], pathIndex: number): FileItem[] => {
-  //   //     if (pathIndex >= currentPath.length) {
-  //   //       // We've reached the target directory, add the new folder
-  //   //       return [...items, newFolder];
-  //   //     }
-
-  //   //     const targetId = currentPath[pathIndex];
-        
-  //   //     return items.map((item) => {
-  //   //       if (item.id === targetId && item.type === "folder") {
-  //   //         // This is the folder we need to navigate into
-  //   //         return {
-  //   //           ...item,
-  //   //           children: updateFolderStructure(item.children || [], pathIndex + 1)
-  //   //         };
-  //   //       }
-  //   //       return item; // Return unchanged for other items
-  //   //     });
-  //   //   };
-
-  //   //   return updateFolderStructure(prev, 0);
-  //   // });
-
-  //   setShowModal(false);
-  // };
 
   const getCurrentFolderItems = (): FileItem[] => {
     let current = folders;
@@ -416,15 +319,15 @@ export default function Home() {
     <div className="flex h-screen">
       <Sidebar
         data={folders}
-        onCreateFolder={() => setShowModal(true)}
+        hidden={sidebarHidden}
+        setHidden={setSidebarHidden}
       />
-
-      <main className="flex-1 p-6 bg-gray-100">
+      <main className={"flex-1 p-6 bg-gray-100 transition-all duration-300 lg:ml-64"}>
         <h1 className="text-2xl font-bold mb-4">My Drive</h1>
         <div className="flex justify-between mb-5">
           {currentPath.length > 0 && (
             <button
-              className="mb-4 text-sm text-blue-600 cursor-pointer hover:underline"
+              className="text-sm lg:font-semibold text-blue-600 cursor-pointer hover:underline"
               onClick={() => setCurrentPath((prev) => prev.slice(0, -1))}
             >
               ← Back
@@ -434,14 +337,14 @@ export default function Home() {
           <div className="flex gap-2 ml-auto">
             <button
               onClick={() => setShowUploadModal(true)}
-              className="bg-white p-4 rounded shadow hover:shadow-md transition flex gap-3 items-center text-center cursor-pointer"
+              className="bg-white p-2.5 text-sm lg:p-4 rounded-xl shadow-lg hover:shadow-md transition flex gap-3 items-center text-center cursor-pointer"
             >
               <FaUpload /> Upload File
             </button>
             
             <button
               onClick={() => setShowModal(true)}
-              className="bg-white p-4 rounded shadow hover:shadow-md transition flex gap-3 items-center text-center cursor-pointer"
+              className="bg-white p-2.5 text-sm lg:p-4 rounded-xl shadow-lg hover:shadow-md transition flex gap-3 items-center text-center cursor-pointer"
             >
               <FaPlus /> Create Folder
             </button>

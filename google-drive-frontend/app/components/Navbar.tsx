@@ -30,11 +30,11 @@ const Navbar = () => {
 
   return (
     <>
-      <nav className="flex items-center justify-between gap-4 p-4 bg-gray-900 text-white">
-        <h1 className="text-xl font-semibold">Drive Clone</h1>
+      <nav className="flex items-center justify-between gap-4 py-4 px-14 lg:pr-4 lg:pl-64 bg-gray-900 text-white shadow-xl">
+        <h1 className="text-xl ml-4 font-extrabold">Drive Clone</h1>
         <button
           onClick={handleAuthClick}
-          className="bg-blue-500 hover:bg-blue-600 px-4 py-2 rounded cursor-pointer"
+          className="bg-blue-500 font-bold text-lg hover:bg-blue-600 px-4 py-2 rounded-lg cursor-pointer"
         >
           {user ? "Logout" : "Login"}
         </button>

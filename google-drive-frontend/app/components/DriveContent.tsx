@@ -29,7 +29,7 @@ const DriveContent: React.FC<Props> = ({ items, onFolderClick, onFileClick, onRe
       {items.map((item) => (
         <div
           key={item.id}
-          className="bg-white rounded shadow p-4 relative group"
+          className="bg-white rounded-xl shadow-lg p-4 relative group"
         >
           <div
             className="cursor-pointer"
@@ -58,10 +58,10 @@ const DriveContent: React.FC<Props> = ({ items, onFolderClick, onFileClick, onRe
 
           <div className="absolute top-2 right-2 flex gap-2 opacity-0 group-hover:opacity-100 transition">
             <button onClick={() => { setEditingId(item.id); setTempName(item.name); }}>
-              <FaEdit className="text-blue-600" />
+              <FaEdit className="text-blue-600 cursor-pointer" />
             </button>
             <button onClick={() => onDelete(item.id)}>
-              <FaTrash className="text-red-600" />
+              <FaTrash className="text-red-600 cursor-pointer" />
             </button>
           </div>
         </div>
